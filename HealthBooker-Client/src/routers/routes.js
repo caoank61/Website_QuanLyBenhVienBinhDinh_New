@@ -23,7 +23,8 @@ import Tournament from "../pages/Tournament/tournament";
 import TournamentDetai from "../pages/TournamentDetai/tournamentDetai";
 import ResetPassword from "../pages/ResetPassword/resetPassword";
 import RoleSystem from "../pages/ResidenceRules/residenceRules";
-
+import Service from "../pages/Service/service";
+import ServiceDetail from "../pages/ServiceDetail/serviceDetail";
 
 const RouterURL = withRouter(({ location }) => {
 
@@ -50,7 +51,6 @@ const RouterURL = withRouter(({ location }) => {
                     <PrivateRoute exact path="/change-password/:id">
                         <ChangePassword />
                     </PrivateRoute>
-
                     <Layout>
                         <Footer />
                     </Layout>
@@ -88,6 +88,14 @@ const RouterURL = withRouter(({ location }) => {
                     <Route exact path="/tournament-result/:id">
                         <TournamentDetai />
                     </Route>
+                    <Route exact path="/service">
+                        <Service />
+                    </Route>
+                  
+                    <Route exact path="/service/:id">
+                        <ServiceDetail />
+                    </Route>
+                    
                     <Route exact path="/rule-system">
                         <RoleSystem />
                     </Route>
@@ -178,6 +186,14 @@ const RouterURL = withRouter(({ location }) => {
                     <Route exact path="/rule-system">
                         <PublicContainer />
                     </Route>
+                    <Route exact path="/service">
+                        <PublicContainer />
+                    </Route>
+                    <Route exact path="/service/:id">
+                        <PublicContainer />
+                    </Route>
+
+                    
 
                     <Route>
                         <NotFound />

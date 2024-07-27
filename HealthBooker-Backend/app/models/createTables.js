@@ -125,37 +125,6 @@ const createTables = async () => {
 
         console.log('Table "products" created or already exists.');
 
-        // Tạo bảng "tournaments" nếu chưa tồn tại
-        await db.execute(`
-                CREATE TABLE IF NOT EXISTS tournaments (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    info TEXT,
-                    teams INT DEFAULT 0,
-                    matches INT DEFAULT 0,
-                    group_count INT DEFAULT 0, 
-                    prizes INT DEFAULT 0,
-                    status VARCHAR(255) DEFAULT 'active',
-                    approval_status VARCHAR(255) DEFAULT 'pending',
-                    id_users INT,
-                    image VARCHAR(500), 
-                    FOREIGN KEY (id_users) REFERENCES users(id)
-                )
-            `);
-        console.log('Table "tournaments" created or already exists.');
-
-        // Tạo bảng "tournament_results" nếu chưa tồn tại
-        await db.execute(`
-        CREATE TABLE IF NOT EXISTS tournament_results (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            tournament_id INT NOT NULL,
-            result_info TEXT,
-            image VARCHAR(500),
-            FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
-        )
-    `);
-
-        console.log('Table "tournament_results" created or already exists.');
 
         // Tạo bảng "bookings" nếu chưa tồn tại
         await db.execute(`
@@ -168,7 +137,7 @@ const createTables = async () => {
             end_time TIME NOT NULL,
             payment_method VARCHAR(255) NOT NULL,
             total_amount DECIMAL(10, 2) NOT NULL,
-            status VARCHAR(255) DEFAULT 'pending', -- Tình trạng đặt sân (ví dụ: pending, confirmed, cancelled)
+            status VARCHAR(255) DEFAULT 'pending', -- Tình trạng đặt lịch (ví dụ: pending, confirmed, cancelled)
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (court_id) REFERENCES courts(id)  
         )
@@ -233,6 +202,72 @@ const createTables = async () => {
    `);
 
         console.log('Table "news" created or already exists.');
+
+        await db.execute(`
+        CREATE TABLE IF NOT EXISTS drugs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            price DECIMAL(10, 2) NOT NULL,
+            quantity INT NOT NULL,
+            expiry_date DATE NOT NULL,
+            status VARCHAR(255) DEFAULT 'active',
+            description TEXT,
+            image VARCHAR(500)
+        )
+    `);
+        console.log('Table "drugs" created or already exists.');
+
+        await db.execute(`
+    CREATE TABLE IF NOT EXISTS schedules (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        date DATE NOT NULL,
+        shift VARCHAR(50) NOT NULL,
+        doctor_id INT NOT NULL,
+        department_id INT NOT NULL,
+        start_time TIME NOT NULL,
+        end_time TIME NOT NULL,
+        note TEXT,
+        status VARCHAR(50) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (doctor_id) REFERENCES courts(id),
+        FOREIGN KEY (department_id) REFERENCES field_types(id)
+    )
+`);
+        console.log('Table "schedules" created or already exists.');
+
+        // Tạo bảng prescriptions nếu chưa tồn tại
+        await db.execute(`
+            CREATE TABLE IF NOT EXISTS prescriptions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                doctor_id INT NOT NULL,
+                notes VARCHAR(500) NOT NULL,
+                status VARCHAR(50) NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (doctor_id) REFERENCES users(id)
+            )
+        `);
+
+        console.log('Table "prescriptions" created or already exists.');
+
+        // Tạo bảng prescription_items nếu chưa tồn tại
+        await db.execute(`
+        CREATE TABLE IF NOT EXISTS prescription_items (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            prescription_id INT NOT NULL,
+            drug_id INT NOT NULL,
+            dosage VARCHAR(255) NOT NULL,
+            frequency VARCHAR(255) NOT NULL,
+            quantity INT NOT NULL,
+            FOREIGN KEY (prescription_id) REFERENCES prescriptions(id),
+            FOREIGN KEY (drug_id) REFERENCES drugs(id)
+        )
+        `);
+
+        console.log('Table "prescription_items" created or already exists.');
 
 
     } catch (error) {

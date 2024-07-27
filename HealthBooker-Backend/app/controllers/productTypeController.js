@@ -24,7 +24,7 @@ exports.addProductType = async (req, res) => {
 // Sửa thông tin loại hàng hóa
 exports.updateProductType = async (req, res) => {
     try {
-        const { name } = req.body;
+        const { name, status } = req.body;
         const id = req.params.id;
 
         // Kiểm tra xem tên loại hàng hóa mới không trùng với các tên loại hàng hóa khác (trừ chính loại hàng hóa đang cập nhật)
@@ -35,14 +35,15 @@ exports.updateProductType = async (req, res) => {
             }
         }
 
-        // Tiếp tục quá trình cập nhật loại hàng hóa
-        await db.execute('UPDATE product_types SET name = ? WHERE id = ?', [name, id]);
-        res.status(200).json({ id, name });
+        // Tiếp tục quá trình cập nhật loại hàng hóa và trạng thái
+        await db.execute('UPDATE product_types SET name = ?, status = ? WHERE id = ?', [name, status, id]);
+        res.status(200).json({ id, name, status });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error updating product type' });
     }
 };
+
 
 
 // Xóa loại hàng hóa

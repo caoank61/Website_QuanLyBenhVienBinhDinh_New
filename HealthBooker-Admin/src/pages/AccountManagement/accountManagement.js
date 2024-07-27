@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, CopyOutlined, HomeOutlined, PlusOutlined, StopOutlined, UserOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CopyOutlined, HomeOutlined, PlusOutlined, StopOutlined, UserOutlined, CrownOutlined, MedicineBoxOutlined } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout';
 import { BackTop, Breadcrumb, Button, Modal, Form, Card, Col, Input, Popconfirm, Row, Space, Spin, Table, Tag, notification, message, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -64,7 +64,7 @@ const AccountManagement = () => {
             key: 'phone',
         },
         {
-            title: 'Role',
+            title: 'Phân quyền',
             dataIndex: 'role',
             key: 'role',
             width: '12%',
@@ -77,14 +77,21 @@ const AccountManagement = () => {
                             </Tag> : text === "isSeller" ?
                                 <Tag color="green" key={text} style={{ width: 120, textAlign: "center" }} icon={<CheckCircleOutlined />}>
                                     Bác sỹ
-                                </Tag> :  text === "isClient" ?
-                                        <Tag color="geekblue" key={text} style={{ width: 120, textAlign: "center" }} icon={<UserOutlined />}>
-                                            Khách hàng
-                                        </Tag> : null
+                                </Tag> : text === "isClient" ?
+                                    <Tag color="geekblue" key={text} style={{ width: 120, textAlign: "center" }} icon={<UserOutlined />}>
+                                        Khách hàng
+                                    </Tag> : text === "isHead" ?
+                                        <Tag color="purple" key={text} style={{ width: 120, textAlign: "center" }} icon={<CrownOutlined />}>
+                                            Trưởng khoa
+                                        </Tag> : text === "isPharmacist" ?
+                                            <Tag color="orange" key={text} style={{ width: 120, textAlign: "center" }} icon={<MedicineBoxOutlined />}>
+                                                Dược sỹ
+                                            </Tag> : null
                     }
                 </Space>
             ),
-        },
+        },        
+        
 
         {
             title: 'Trạng thái',
@@ -110,8 +117,8 @@ const AccountManagement = () => {
             ),
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Hành động',
+            key: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Row>
@@ -494,7 +501,11 @@ const AccountManagement = () => {
                             <Select placeholder="Chọn phân quyền">
                                 <Option value="isAdmin">Admin</Option>
                                 <Option value="isSeller">Bác Sỹ</Option>
+                                <Option value="isHead">Trưởng khoa</Option>
+                                <Option value="isPharmacist">Dược sĩ</Option>
                                 <Option value="isClient">Khách hàng</Option>
+
+                                
                             </Select>
                         </Form.Item>
 

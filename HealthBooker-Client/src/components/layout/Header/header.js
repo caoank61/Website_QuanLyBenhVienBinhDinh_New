@@ -85,7 +85,7 @@ function Topbar() {
       className={styles.header}
     >
       <div className="">
-        <img style={{ color: "#000000", fontSize: 15, height: 55, width: 300, cursor: "pointer"  }} src="https://benhvienbinhdinh.com.vn/wp-content/uploads/2021/06/cropped-LogoXanhDuong-1920x892.png.webp" onClick={() => handleLink("/home")}></img>
+        <img style={{ color: "#000000", fontSize: 15, height: 55, width: 300, cursor: "pointer" }} src="https://benhvienbinhdinh.com.vn/wp-content/uploads/2021/06/cropped-LogoXanhDuong-1920x892.png.webp" onClick={() => handleLink("/home")}></img>
       </div>
       <BarsOutlined className={styles.bars} onClick={showDrawer} />
       <div className={styles.navmenu} style={{ marginLeft: 15 }}>
@@ -94,6 +94,9 @@ function Topbar() {
         </NavLink>
         <NavLink className={styles.navlink} to="/product-list/1" activeStyle>
           Bác sỹ
+        </NavLink>
+        <NavLink className={styles.navlink} to="/service" activeStyle>
+          Dịch vụ
         </NavLink>
         <NavLink className={styles.navlink} to="/news" activeStyle>
           Sự kiện
@@ -104,19 +107,19 @@ function Topbar() {
         <NavLink className={styles.navlink} to="/rule-system" activeStyle>
           Quy định hệ thống
         </NavLink>
-        
+
       </div>
       <div className={styles.logBtn}>
         <div style={{ position: 'relative', display: 'flex', float: 'right', alignItems: "center", cursor: 'pointer' }}>
-         
-       
+
+
           <Row>
             <DropdownAvatar key="avatar" />
           </Row>
-      
+
         </div>
       </div>
-     
+
     </Header >
   );
 }

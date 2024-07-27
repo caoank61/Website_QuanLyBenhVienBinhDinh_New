@@ -12,7 +12,7 @@ exports.countCourtsAndServices = async (req, res) => {
     }
 };
 
-// Thống kê số lượng khách hàng và lượt đặt sân
+// Thống kê số lượng khách hàng và lượt đặt lịch
 exports.countCustomersAndBookings = async (req, res) => {
     try {
         const [customers] = await db.execute('SELECT COUNT(DISTINCT user_id) AS totalCustomers FROM bookings');
@@ -51,16 +51,14 @@ exports.statistics = async (req, res) => {
         const [userData] = await db.execute('SELECT * FROM users WHERE id = ?', [userId]);
         const [bookingData] = await db.execute('SELECT * FROM bookings INNER JOIN courts ON bookings.court_id = courts.id WHERE courts.id_users = ?', [userId]);
         const [orderData] = await db.execute('SELECT * FROM orders WHERE user_id = ?', [userId]);
-        const [tournamentData] = await db.execute('SELECT * FROM tournaments WHERE id_users = ?', [userId]);
         const [productData] = await db.execute('SELECT * FROM products WHERE id_user = ?', [userId]);
         const [courtData] = await db.execute('SELECT * FROM courts WHERE id_users = ?', [userId]);
 
         // Tổng hợp thông tin từ các bảng
         const statistics = {
             user: userData[0], // Thông tin người dùng
-            bookings: bookingData, // Thông tin đặt sân
+            bookings: bookingData, // Thông tin đặt lịch
             orders: orderData, // Thông tin đơn hàng
-            tournaments: tournamentData, // Thông tin giải đấu
             products: productData, // Thông tin sản phẩm
             courts: courtData, // Thông tin sân tennis
             // Thêm các thông tin từ các bảng khác vào đây nếu cần

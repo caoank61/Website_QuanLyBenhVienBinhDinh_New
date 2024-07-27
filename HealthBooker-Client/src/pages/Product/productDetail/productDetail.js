@@ -84,7 +84,6 @@ const ProductDetail = () => {
                 await courtsManagementApi.getCourtById(id).then(async item => {
                     const res = await userApi.getProfileByID(item.id_users); // Sử dụng await ở đây
                     console.log(res);
-                    setQR(res?.image_qr);
                     setProductDetail(item);
                     setProductReview(item.reviews);
                     setProductReviewCount(item.reviewStats);
@@ -122,9 +121,9 @@ const ProductDetail = () => {
             const bookingDateTime = dayjs(values.booking_date); // Chuyển đổi booking_date thành đối tượng dayjs
             const startTime = dayjs(values.start_time);
             const endTime = dayjs(values.end_time);
-            // Tính thời gian đặt sân (phút)
+            // Tính thời gian đặt lịch khám (phút)
             const bookingDuration = endTime.diff(startTime, 'minute');
-            console.log("thời gian đặt sân", bookingDuration)
+            console.log("thời gian đặt lịch khám", bookingDuration)
             // Tính total_amount
             const totalAmount = ((bookingDuration / 60) * productDetail.price);
             const categoryList = {
@@ -143,7 +142,7 @@ const ProductDetail = () => {
                     notification["error"]({
                         message: `Thông báo`,
                         description:
-                            'Đặt sân không được trùng',
+                            'Đặt lịch khám không được trùng',
                     });
                     return;
                 }
@@ -151,14 +150,14 @@ const ProductDetail = () => {
                     notification["error"]({
                         message: `Thông báo`,
                         description:
-                            'Đặt sân thất bại',
+                            'Đặt lịch khám thất bại',
                     });
                 }
                 else {
                     notification["success"]({
                         message: `Thông báo`,
                         description:
-                            'Đặt sân thành công',
+                            'Đặt lịch khám thành công',
                     });
                     setOpenModalCreate(false);
 
@@ -179,7 +178,7 @@ const ProductDetail = () => {
     };
 
     const isButtonDisabled = productDetail.status !== 'active' ? true : false;
-    const buttonText = isButtonDisabled ? 'bác sỹ đang đóng' : 'Đặt nhanh kẻo muộn';
+    const buttonText = isButtonDisabled ? 'bác sỹ đang đóng' : 'Đặt lịch';
 
     function disabledDate(current) {
         // Vô hiệu hóa tất cả các ngày quá khứ
@@ -237,12 +236,7 @@ const ProductDetail = () => {
                                     bordered={false}
                                     style={{ width: "90%" }}
                                 >
-                                    <div className="price_product" >
-                                        {Number(productDetail?.price)?.toLocaleString("vi", {
-                                            style: "currency",
-                                            currency: "VND",
-                                        })}đ/giờ
-                                    </div>
+                                    
 
                                     <div class="box-product-promotion">
                                         <div class="box-product-promotion-header">
@@ -382,12 +376,6 @@ const ProductDetail = () => {
 
                                             <div>Khu vực: {item.area}</div>
                                             <div>chuyên khoa: {item.field_type}</div>
-
-                                            <div className="price-amount">
-                                                <Paragraph className='price-product'>
-                                                    {numberWithCommas(item.price)}đ/giờ
-                                                </Paragraph>
-                                            </div>
                                         </div>
 
 
@@ -405,7 +393,7 @@ const ProductDetail = () => {
                     </div>
 
                     <Modal
-                        title="Tạo đơn đặt sân mới"
+                        title="Tạo đơn đặt lịch khám mới"
                         visible={openModalCreate}
                         style={{ top: 100 }}
                         onOk={() => {
@@ -437,11 +425,11 @@ const ProductDetail = () => {
 
                                 <Form.Item
                                     name="booking_date"
-                                    label="Ngày đặt sân"
+                                    label="Ngày đặt lịch khám"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Vui lòng chọn ngày đặt sân!',
+                                            message: 'Vui lòng chọn ngày đặt lịch khám!',
                                         },
                                     ]}
                                     style={{ marginBottom: 10 }}
@@ -449,6 +437,7 @@ const ProductDetail = () => {
                                     <DatePicker
                                         style={{ width: '100%' }}
                                         disabledDate={disabledDate}
+                                        placeholder="Chọn ngày đặt"
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -464,6 +453,7 @@ const ProductDetail = () => {
                                 >
                                     <TimePicker
                                         style={{ width: '100%' }}
+                                        placeholder="Chọn thời gian bắt đầu"
                                         format="HH:mm"
                                         disabledHours={() => {
                                             // Giới hạn giờ từ 7h đến 22h
@@ -513,6 +503,7 @@ const ProductDetail = () => {
                                     <TimePicker
                                         style={{ width: '100%' }}
                                         format="HH:mm"
+                                        placeholder="Chọn thời gian kết thúc"
                                         disabledHours={() => {
                                             // Giới hạn giờ từ 7h đến 22h
                                             const disabledHours = [];
@@ -563,11 +554,9 @@ const ProductDetail = () => {
                                     label="Ảnh QR thanh toán"
                                     style={{ marginBottom: 10 }}
                                 >
-                                    {qr ? (
-                                        <img src={qr} alt="QR Code" style={{ maxWidth: '100%', height: 'auto' }} />
-                                    ) : (
-                                        <span>Ảnh QR không có sẵn</span>
-                                    )}
+                                  
+                                        <img src="https://i.ibb.co/FzJrSws/448311044-1844405769400493-3358237318138491974-n.jpg" alt="QR Code" style={{ maxWidth: '100%', height: 'auto' }} />
+                                 
                                 </Form.Item>
 
 

@@ -170,6 +170,31 @@ const OrderList = lazy(() => {
         .then(([moduleExports]) => moduleExports);
 });
 
+const DrugManagement = lazy(() => {
+    return Promise.all([
+        import('../pages/Admin/DrugManagement/drugManagement'),
+        new Promise(resolve => setTimeout(resolve, 0))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
+const ScheduleManagement = lazy(() => {
+    return Promise.all([
+        import('../pages/Admin/ScheduleManagement/scheduleManagement'),
+        new Promise(resolve => setTimeout(resolve, 0))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
+const PrescriptionManagement = lazy(() => {
+    return Promise.all([
+        import('../pages/Admin/PrescriptionManagement/prescriptionManagement'),
+        new Promise(resolve => setTimeout(resolve, 0))
+    ])
+        .then(([moduleExports]) => moduleExports);
+});
+
+
 const RouterURL = withRouter(({ location }) => {
 
 
@@ -294,6 +319,26 @@ const RouterURL = withRouter(({ location }) => {
                                 <TournamentResult />
                             </Suspense>
                         </PrivateRoute>
+
+                        <PrivateRoute exact path="/drug-management">
+                            <Suspense fallback={<LoadingScreen />}>
+                                <DrugManagement />
+                            </Suspense>
+                        </PrivateRoute>
+
+                        <PrivateRoute exact path="/schedule-management">
+                            <Suspense fallback={<LoadingScreen />}>
+                                <ScheduleManagement />
+                            </Suspense>
+                        </PrivateRoute>
+
+                        <PrivateRoute exact path="/prescription-management">
+                            <Suspense fallback={<LoadingScreen />}>
+                                <PrescriptionManagement />
+                            </Suspense>
+                        </PrivateRoute>
+                        
+                       
 
                         <PrivateRoute exact path="/notfound">
                             <NotFound />
@@ -429,11 +474,15 @@ const RouterURL = withRouter(({ location }) => {
                         <DefaultContainer />
                     </Route>
 
-                    <Route exact path="/tournament">
+                    <Route exact path="/prescription-management">
                         <DefaultContainer />
                     </Route>
 
                     <Route exact path="/product-management">
+                        <DefaultContainer />
+                    </Route>
+
+                    <Route exact path="/drug-management">
                         <DefaultContainer />
                     </Route>
 
@@ -442,6 +491,10 @@ const RouterURL = withRouter(({ location }) => {
                     </Route>
 
                     <Route exact path="/product-type-management">
+                        <DefaultContainer />
+                    </Route>
+
+                    <Route exact path="/schedule-management">
                         <DefaultContainer />
                     </Route>
 

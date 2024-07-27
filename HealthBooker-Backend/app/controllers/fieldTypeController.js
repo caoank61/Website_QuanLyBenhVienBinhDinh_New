@@ -22,7 +22,7 @@ exports.addFieldType = async (req, res) => {
 
 exports.updateFieldType = async (req, res) => {
     try {
-        const { type } = req.body;
+        const { type, status } = req.body;
         const id = req.params.id;
 
         // Kiểm tra xem chuyên khoa bóng mới không trùng với các chuyên khoa bóng khác (trừ chính chuyên khoa bóng đang cập nhật)
@@ -33,14 +33,15 @@ exports.updateFieldType = async (req, res) => {
             }
         }
 
-        // Tiếp tục quá trình cập nhật chuyên khoa bóng
-        await db.execute('UPDATE field_types SET type = ? WHERE id = ?', [type, id]);
-        res.status(200).json({ id, type });
+        // Tiếp tục quá trình cập nhật chuyên khoa bóng và trạng thái
+        await db.execute('UPDATE field_types SET type = ?, status = ? WHERE id = ?', [type, status, id]);
+        res.status(200).json({ id, type, status });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error updating field type' });
     }
 };
+
 
 
 exports.deleteFieldType = async (req, res) => {

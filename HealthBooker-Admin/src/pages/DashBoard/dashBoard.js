@@ -103,12 +103,6 @@ const DashBoard = () => {
                     setLoading(false);
                 });
 
-                await tournamentApi.getAllTournaments().then((res) => {
-                    console.log(res);
-                    setTournament(res)
-                    setLoading(false);
-                });
-
                 await dashBoardApi.getAssetStatistics().then((res) => {
                     console.log(res);
                     setStatisticList(res);
@@ -278,7 +272,7 @@ const DashBoard = () => {
                                         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                                             <thead className="bg-gray-800 text-white">
                                                 <tr>
-                                                    <th className="py-3 px-6 text-left">Tên Sân</th>
+                                                    <th className="py-3 px-6 text-left">Tên bác sỹ</th>
                                                     <th className="py-3 px-6 text-left">Số Lượt Đặt</th>
                                                     <th className="py-3 px-6 text-left">Tổng Doanh Thu</th>
                                                 </tr>
@@ -317,7 +311,7 @@ const DashBoard = () => {
                                         <div className='card_number'>
                                             <div>
                                                 <div className='number_total'>{statisticListSeller?.products?.length}</div>
-                                                <div className='title_total'>Số sản phẩm</div>
+                                                <div className='title_total'>Số dịch vụ</div>
                                             </div>
                                             <div>
                                                 <NotificationTwoTone style={{ fontSize: 48 }} />
@@ -326,7 +320,7 @@ const DashBoard = () => {
                                     </Card>
                                 </Col>
 
-                                <Col span={6}>
+                                {/* <Col span={6}>
                                     <Card className="card_total" bordered={false}>
                                         <div className='card_number'>
                                             <div>
@@ -338,14 +332,14 @@ const DashBoard = () => {
                                             </div>
                                         </div>
                                     </Card>
-                                </Col>
+                                </Col> */}
 
                                 <Col span={6}>
                                     <Card className="card_total" bordered={false}>
                                         <div className='card_number'>
                                             <div>
                                                 <div className='number_total'>{statisticListSeller?.bookings?.length || 0}</div>
-                                                <div className='title_total'>Số lượt đặt sân</div>
+                                                <div className='title_total'>Số lượt đặt lịch</div>
                                             </div>
                                             <div>
                                                 <ShoppingTwoTone style={{ fontSize: 48 }} />
@@ -356,7 +350,7 @@ const DashBoard = () => {
                             </Row>
 
                             <div className="container mx-auto p-8">
-                                <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Báo Cáo Đặt Sân</h1>
+                                <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Báo Cáo Lịch Đặt</h1>
                                 <div className="flex justify-center mb-8">
                                     <input
                                         type="date"
@@ -381,7 +375,7 @@ const DashBoard = () => {
                                         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                                             <thead className="bg-gray-800 text-white">
                                                 <tr>
-                                                    <th className="py-3 px-6 text-left">Tên Sân</th>
+                                                    <th className="py-3 px-6 text-left">Tên Bác Sỹ</th>
                                                     <th className="py-3 px-6 text-left">Số Lượt Đặt</th>
                                                     <th className="py-3 px-6 text-left">Tổng Doanh Thu</th>
                                                 </tr>

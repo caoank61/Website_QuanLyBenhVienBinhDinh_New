@@ -155,11 +155,7 @@ const ProductList = () => {
                         <div className="truncate">Khu vực: {item.area}</div>
                         <div className="truncate">chuyên khoa: {item.field_type}</div>
 
-                        <div className="price-amount">
-                          <Paragraph className='price-product'>
-                            {numberWithCommas(Number(item.price))}đ/giờ
-                          </Paragraph>
-                        </div>
+                       
                       </div>
                     </div>
                   </div>

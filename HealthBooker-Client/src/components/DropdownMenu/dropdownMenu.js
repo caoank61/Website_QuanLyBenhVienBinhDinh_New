@@ -1,4 +1,4 @@
-import { LogoutOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, ShoppingCartOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
@@ -52,6 +52,11 @@ function DropdownAvatar() {
       <Menu.Item icon={<ShoppingCartOutlined />}  >
         <a target="_blank" rel="noopener noreferrer" onClick={() => handleRouter("/cart-history")}>
           Quản lý lịch đặt
+        </a>
+      </Menu.Item>
+      <Menu.Item icon={<SettingOutlined />}  >
+        <a target="_blank" rel="noopener noreferrer" onClick={() => handleRouter("/change-password/" + userData.id)}>
+          Thay đổi mật khẩu
         </a>
       </Menu.Item>
       <Menu.Item key="3" icon={<LogoutOutlined />} onClick={Logout}  >

@@ -235,8 +235,8 @@ const AreaManagement = () => {
             render: (text) => moment(text).format('YYYY-MM-DD'),
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Hành động',
+            key: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Row>

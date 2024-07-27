@@ -214,11 +214,11 @@ const OrderList = () => {
                 <body>
                     <div class="invoice">
                         <div class="invoice-header">
-                            <h1>Hóa đơn bán hàng</h1>
+                            <h1>Hóa đơn khám bệnh</h1>
                             <p>Ngày: ${new Date().toLocaleDateString()}</p>
                         </div>
                         <div class="invoice-details">
-                            <p><span class="font-semibold">Tên sân:</span> ${order.court_name}</p>
+                            <p><span class="font-semibold">Tên:</span> ${order.court_name}</p>
                             <p><span class="font-semibold">Ngày đặt:</span> ${formattedDate}</p>
                             <p><span class="font-semibold">Giờ bắt đầu:</span> ${order.start_time}</p>
                             <p><span class="font-semibold">Giờ kết thúc:</span> ${order.end_time}</p>
@@ -251,13 +251,13 @@ const OrderList = () => {
             dataIndex: 'phone',
             key: 'phone',
         },
+        // {
+        //     title: 'Tên bác sỹ',
+        //     dataIndex: 'court_name',
+        //     key: 'court_name',
+        // },
         {
-            title: 'Tên sân',
-            dataIndex: 'court_name',
-            key: 'court_name',
-        },
-        {
-            title: 'Chủ sân',
+            title: 'Bác sỹ',
             dataIndex: 'owner_name',
             key: 'owner_name',
         },
@@ -302,8 +302,8 @@ const OrderList = () => {
             ),
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Hành động',
+            key: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Row>
@@ -360,7 +360,7 @@ const OrderList = () => {
                             </Breadcrumb.Item>
                             <Breadcrumb.Item href="">
                                 <ShoppingCartOutlined />
-                                <span>Quản lý đặt sân</span>
+                                <span>Quản lý đặt lịch khám</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
@@ -468,7 +468,7 @@ const OrderList = () => {
                 </Modal>
 
                 <Modal
-                    title="Cập nhật đặt sân"
+                    title="Cập nhật đặt khám"
                     visible={openModalUpdate}
                     style={{ top: 100 }}
                     onOk={() => {

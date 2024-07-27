@@ -50,9 +50,9 @@ function Sidebar() {
       icon: <BarsOutlined />
     },
     {
-      key: "asset-management",
-      title: "Quản lý bác sỹ",
-      link: "/asset-management",
+      key: "drug-management",
+      title: "Quản lý thuốc",
+      link: "/drug-management",
       icon: <ContainerOutlined />
     },
     {
@@ -84,22 +84,10 @@ function Sidebar() {
       icon: <DashboardOutlined />
     },
     {
-      key: "employee-management",
-      title: "Quản lý nhân viên",
-      link: "/employee-management",
-      icon: <UserOutlined />
-    },
-    {
       key: "asset-management",
-      title: "Quản lý bác sỹ",
+      title: "Quản lý thông tin",
       link: "/asset-management",
       icon: <ContainerOutlined />
-    },
-    {
-      key: "product-management",
-      title: "Quản lý dịch vụ",
-      link: "/product-management",
-      icon: <BarsOutlined />
     },
     {
       key: "news-list",
@@ -109,11 +97,63 @@ function Sidebar() {
     },
     {
       key: "order-list",
-      title: "Danh sách đặt sân",
+      title: "Danh sách đặt lịch",
       link: "/order-list",
-      icon:<ShoppingOutlined />
+      icon: <ShoppingOutlined />
     },
   ];
+
+
+
+  const menuSidebarHead = [
+    {
+      key: "dash-board",
+      title: "Dashboards",
+      link: "/dash-board",
+      icon: <DashboardOutlined />
+    },
+    {
+      key: "schedule-management",
+      title: "Quản Lý Lịch Trực",
+      link: "/schedule-management",
+      icon: <FundProjectionScreenOutlined />
+    },
+    {
+      key: "asset-management",
+      title: "Quản lý bác sỹ",
+      link: "/asset-management",
+      icon: <ContainerOutlined />
+    },
+    {
+      key: "news-list",
+      title: "Xem sự kiện",
+      link: "/news-list",
+      icon: <MessageOutlined />
+    },
+  ];
+
+  const menuSidebarPharmacist = [
+    {
+      key: "dash-board",
+      title: "Dashboards",
+      link: "/dash-board",
+      icon: <DashboardOutlined />
+    },
+    {
+      key: "prescription-management",
+      title: "Kê đơn thuốc",
+      link: "/prescription-management",
+      icon: <FundProjectionScreenOutlined />
+    },
+    {
+      key: "news-list",
+      title: "Xem sự kiện",
+      link: "/news-list",
+      icon: <MessageOutlined />
+    },
+  ];
+
+  
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("user")));
@@ -175,7 +215,30 @@ function Sidebar() {
               {map.title}
             </Menu.Item>
           ))
+        ) : user.role === "isHead" ? (
+          menuSidebarHead.map((map) => (
+            <Menu.Item
+              onClick={() => navigate(map.link, map.key)}
+              key={map.key}
+              icon={map.icon}
+              className="customeClass"
+            >
+              {map.title}
+            </Menu.Item>
+          ))
+        ) : user.role === "isPharmacist" ? (
+          menuSidebarPharmacist.map((map) => (
+            <Menu.Item
+              onClick={() => navigate(map.link, map.key)}
+              key={map.key}
+              icon={map.icon}
+              className="customeClass"
+            >
+              {map.title}
+            </Menu.Item>
+          ))
         ) : null}
+
       </Menu>
 
     </Sider >

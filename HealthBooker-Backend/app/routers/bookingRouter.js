@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const bookingController = require('../controllers/bookingController');
 
-// Đặt sân
+// đặt lịch
 router.post('/book', bookingController.bookCourt);
 
 router.get('/revenue-report', bookingController.getRevenueReport);
 
 
-// Xem lịch sử đặt sân
+// Xem lịch sử đặt lịch
 router.get('/history/:user_id', bookingController.getBookingHistory);
 
-// Lấy thông tin đặt sân theo court_id
+// Lấy thông tin đặt lịch theo court_id
 router.get('/court/:court_id', bookingController.getBookingByCourtId);
 
-// API cập nhật trạng thái đặt sân
+// API cập nhật trạng thái đặt lịch
 router.put('/:id/update-status', bookingController.updateBookingStatus);
 
 router.get('/user/:user_id', bookingController.getBookingByUserID);

@@ -272,8 +272,8 @@ const TournamentResult = () => {
         },
 
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Hành động',
+            key: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Row>

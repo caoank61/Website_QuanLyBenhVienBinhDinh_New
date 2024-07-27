@@ -44,10 +44,10 @@ exports.bookCourt = async (req, res) => {
     try {
         const { user_id, court_id, booking_date, start_time, end_time, payment_method, total_amount } = req.body;
 
-        // Lấy tất cả các đặt sân trong khoảng thời gian này của sân đó
+        // Lấy tất cả các đặt lịch trong khoảng thời gian này của lịch khám đó
         const [existingBookings] = await db.execute('SELECT * FROM bookings WHERE court_id = ? AND booking_date = ?', [court_id, booking_date]);
         
-        // Kiểm tra xem khoảng thời gian mới có chồng lên bất kỳ đặt sân nào khác không
+        // Kiểm tra xem khoảng thời gian mới có chồng lên bất kỳ đặt lịch nào khác không
         for (const booking of existingBookings) {
             const existingStartTime = moment(booking.start_time, 'HH:mm');
             const existingEndTime = moment(booking.end_time, 'HH:mm');
@@ -55,7 +55,7 @@ exports.bookCourt = async (req, res) => {
             const newStartTime = moment(start_time, 'HH:mm');
             const newEndTime = moment(end_time, 'HH:mm');
 
-            // Kiểm tra xem thời gian đặt sân mới có chồng lên thời gian của các đặt sân khác không
+            // Kiểm tra xem thời gian đặt lịch mới có chồng lên thời gian của các đặt lịch khác không
             if (
                 (newStartTime.isBetween(existingStartTime, existingEndTime, undefined, '[)') || 
                 newEndTime.isBetween(existingStartTime, existingEndTime, undefined, '(]')) ||
@@ -66,7 +66,7 @@ exports.bookCourt = async (req, res) => {
             }
         }
 
-        // Nếu không có xung đột, thêm đặt sân mới vào cơ sở dữ liệu
+        // Nếu không có xung đột, thêm đặt lịch mới vào cơ sở dữ liệu
         const [result] = await db.execute('INSERT INTO bookings (user_id, court_id, booking_date, start_time, end_time, payment_method, total_amount) VALUES (?, ?, ?, ?, ?, ?, ?)', [user_id, court_id, booking_date, start_time, end_time, payment_method, total_amount]);
         res.status(200).json({ id: result.insertId, user_id, court_id, booking_date, start_time, end_time, payment_method, total_amount });
     } catch (error) {
@@ -77,7 +77,7 @@ exports.bookCourt = async (req, res) => {
 
 
 
-// API xem lịch sử đặt sân của người dùng
+// API xem lịch sử đặt lịch của người dùng
 exports.getBookingHistory = async (req, res) => {
     try {
         const user_id = req.params.user_id;
@@ -95,7 +95,7 @@ exports.getBookingHistory = async (req, res) => {
 };
 
 
-// Cập nhật trạng thái đặt sân
+// Cập nhật trạng thái đặt lịch
 exports.updateBookingStatus = async (req, res) => {
     try {
         const { status } = req.body;
@@ -110,7 +110,7 @@ exports.updateBookingStatus = async (req, res) => {
     }
 };
 
-// API lấy thông tin đặt sân của một chủ sân dựa trên user_id
+// API lấy thông tin đặt lịch của một chủ sân dựa trên user_id
 exports.getBookingByUserID = async (req, res) => {
     try {
         const user_id = req.params.user_id;
@@ -135,7 +135,7 @@ exports.getBookingByUserID = async (req, res) => {
     }
 };
 
-// API lấy thông tin đặt sân của một chủ sân dựa trên user_id
+// API lấy thông tin đặt lịch của một chủ sân dựa trên user_id
 exports.getBookingByUserCourtsID = async (req, res) => {
     try {
         const user_id = req.params.user_id;
@@ -161,7 +161,7 @@ exports.getBookingByUserCourtsID = async (req, res) => {
 
 
 
-// API lấy thông tin đặt sân theo court_id
+// API lấy thông tin đặt lịch theo court_id
 exports.getBookingByCourtId = async (req, res) => {
     try {
         const court_id = req.params.court_id;
@@ -173,7 +173,7 @@ exports.getBookingByCourtId = async (req, res) => {
     }
 };
 
-// API lấy thông tin đặt sân theo ID
+// API lấy thông tin đặt lịch theo ID
 exports.getBookingByID = async (req, res) => {
     try {
         const bookingId = req.params.id;
@@ -189,7 +189,7 @@ exports.getBookingByID = async (req, res) => {
             INNER JOIN users AS owners ON courts.id_users = owners.id
             WHERE bookings.id = ?
         `, [bookingId]);
-        res.status(200).json(rows[0]); // Trả về kết quả đầu tiên, vì chỉ có một đặt sân có ID tương ứng
+        res.status(200).json(rows[0]); // Trả về kết quả đầu tiên, vì chỉ có một đặt lịch có ID tương ứng
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error getting booking by ID' });

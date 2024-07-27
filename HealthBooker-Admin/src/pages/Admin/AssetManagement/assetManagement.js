@@ -33,7 +33,8 @@ import uploadFileApi from '../../../apis/uploadFileApi';
 import userApi from '../../../apis/userApi';
 import { useHistory, useParams } from "react-router-dom";
 import areaManagementApi from '../../../apis/areaManagementApi';
-
+import SunEditor from 'suneditor-react';
+import 'suneditor/dist/css/suneditor.min.css';
 const { Option } = Select;
 
 const AssetManagement = () => {
@@ -47,6 +48,7 @@ const AssetManagement = () => {
     const [form2] = Form.useForm();
     const [id, setId] = useState();
     const [file, setUploadFile] = useState();
+    const [description, setDescription] = useState();
 
     const showModal = () => {
         setOpenModalCreate(true);
@@ -57,17 +59,17 @@ const AssetManagement = () => {
         try {
             const categoryList = {
                 "name": values.name,
-                "description": values.description,
+                "description": description,
                 "price": values.price,
                 "location": values.location,
                 "id_field_types": values.id_field_types,
                 "id_areas": values.id_areas,
                 "image": file,
-                "id_users": userData.id,
+                "id_users": values.id_users,
                 "status": values.status
             };
             return courtsManagementApi.addCourt(categoryList).then(response => {
-                if (response.message === "Tên sân đã tồn tại") {
+                if (response.message === "Tên bác sỹ đã tồn tại") {
                     notification["error"]({
                         message: `Thông báo`,
                         description:
@@ -104,17 +106,17 @@ const AssetManagement = () => {
         try {
             const categoryList = {
                 "name": values.name,
-                "description": values.description,
+                "description": description,
                 "price": values.price,
                 "location": values.location,
                 "id_field_types": values.id_field_types,
                 "id_areas": values.id_areas,
                 "image": file,
-                "id_users": userData.id,
+                "id_users": values.id_users,
                 "status": values.status
             };
             return courtsManagementApi.updateCourt(categoryList, id).then(response => {
-                if (response.message === "Tên sân đã tồn tại") {
+                if (response.message === "Tên bác sỹ đã tồn tại") {
                     notification["error"]({
                         message: `Thông báo`,
                         description:
@@ -158,58 +160,58 @@ const AssetManagement = () => {
     };
 
     const handleCategoryList = async () => {
-            try {
+        try {
 
-                // Lấy tất cả các khu vực có trạng thái là "active"
-                const areaResponse = await areaManagementApi.getAllAreas();
-                console.log(areaResponse);
-                const activeAreas = areaResponse.filter(area => area.status === 'active');
-                setArea(activeAreas);
+            // Lấy tất cả các khu vực có trạng thái là "active"
+            const areaResponse = await areaManagementApi.getAllAreas();
+            console.log(areaResponse);
+            const activeAreas = areaResponse.filter(area => area.status === 'active');
+            setArea(activeAreas);
 
-                // Lấy tất cả các chuyên khoa có trạng thái là "active"
-                const fieldTypesResponse = await fieldtypesApi.getAllFieldTypes();
-                console.log(fieldTypesResponse);
-                const activeFieldTypes = fieldTypesResponse.filter(fieldType => fieldType.status === 'active');
-                setFieldTypes(activeFieldTypes);
+            // Lấy tất cả các chuyên khoa có trạng thái là "active"
+            const fieldTypesResponse = await fieldtypesApi.getAllFieldTypes();
+            console.log(fieldTypesResponse);
+            const activeFieldTypes = fieldTypesResponse.filter(fieldType => fieldType.status === 'active');
+            setFieldTypes(activeFieldTypes);
 
-                setLoading(false);
+            setLoading(false);
 
-                const response = await userApi.getProfile();
-                console.log(response);
-                setUserData(response.user);
+            const response = await userApi.getProfile();
+            console.log(response);
+            setUserData(response.user);
 
-                const createdById = response.user.id;
+            const createdById = response.user.id;
 
-                if (response.user.role == "isAdmin") {
+            if (response.user.role == "isHead") {
 
-                    await courtsManagementApi.getAllCourts().then((res) => {
-                        console.log(res);
-                        setCategory(res);
-                        setLoading(false);
-                    });
-                } else {
-                    await courtsManagementApi.getCourtByUserId(createdById).then((res) => {
-                        console.log(res);
-                        setCategory(res);
-                        setLoading(false);
-                    });
-                }
-
-                ;
-            } catch (error) {
-                console.log('Failed to fetch category list:' + error);
+                await courtsManagementApi.getAllCourts().then((res) => {
+                    console.log(res);
+                    setCategory(res);
+                    setLoading(false);
+                });
+            } else {
+                await courtsManagementApi.getCourtByUserId(createdById).then((res) => {
+                    console.log(res);
+                    setCategory(res);
+                    setLoading(false);
+                });
             }
+
+            ;
+        } catch (error) {
+            console.log('Failed to fetch category list:' + error);
+        }
     }
 
     const handleDeleteCategory = async (id) => {
         setLoading(true);
         try {
             await courtsManagementApi.deleteCourt(id).then(response => {
-                if (response.message === "Không thể xóa sân này vì đã có đặt sân liên kết đến nó.") {
+                if (response.message === "Không thể xóa bác sỹ này vì đã có đặt bác sỹ liên kết đến nó.") {
                     notification["error"]({
                         message: `Thông báo`,
                         description:
-                            "Không thể xóa sân này vì đã có đặt sân liên kết đến nó.",
+                            "Không thể xóa bác sỹ này vì đã có đặt bác sỹ liên kết đến nó.",
 
                     });
                     setLoading(false);
@@ -256,14 +258,22 @@ const AssetManagement = () => {
                     location: response.location,
                     id_field_types: response.id_field_types,
                     id_areas: response.id_areas,
-                    status: response.status
+                    status: response.status,
+                    id_users: response.id_users,
+
                 });
+                setDescription(response.description)
                 console.log(form2);
                 setLoading(false);
             } catch (error) {
                 throw error;
             }
         })();
+    }
+
+    const handleChange = (content) => {
+        console.log(content);
+        setDescription(content);
     }
 
     const handleFilter = async (name) => {
@@ -357,6 +367,20 @@ const AssetManagement = () => {
             title: 'Mô tả',
             dataIndex: 'description',
             key: 'description',
+            render: (description) => (
+                <div 
+                    style={{
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 3,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'normal', 
+                        height: '4.5em'  
+                    }} 
+                    dangerouslySetInnerHTML={{ __html: description }}
+                />
+            ),
         },
         {
             title: 'Khu vực',
@@ -369,7 +393,7 @@ const AssetManagement = () => {
             key: 'field_type',
         },
         {
-            title: 'Người dùng',
+            title: 'Bác sỹ',
             dataIndex: 'user_name',
             key: 'user_name',
         },
@@ -407,12 +431,12 @@ const AssetManagement = () => {
             }
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Hành động',
+            key: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Row>
-                        {userData.role != "isSeller" ? (
+                        {userData.role !== "isSeller" ? (
                             <>
                                 <Popconfirm
                                     title="Bạn muốn phê duyệt bác sỹ này?"
@@ -445,9 +469,6 @@ const AssetManagement = () => {
                                         </Button>
                                     </Popconfirm>
                                 </div>
-                            </>
-                        ) : (
-                            <>
                                 <Button
                                     size="small"
                                     icon={<EditOutlined />}
@@ -472,6 +493,10 @@ const AssetManagement = () => {
                                     </Popconfirm>
                                 </div>
                             </>
+                        ) : (
+                            <>
+
+                            </>
                         )}
                     </Row>
                 </div>
@@ -493,6 +518,7 @@ const AssetManagement = () => {
 
     const [userData, setUserData] = useState([]);
     const [area, setArea] = useState([]);
+    const [user, setUser] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -503,6 +529,11 @@ const AssetManagement = () => {
                 console.log(areaResponse);
                 const activeAreas = areaResponse.filter(area => area.status === 'active');
                 setArea(activeAreas);
+
+                const userResponse = await userApi.listUserByAdmin();
+                console.log(userResponse);
+                const userAreas = userResponse.data.filter(item => item.role === 'isSeller');
+                setUser(userAreas);
 
                 // Lấy tất cả các chuyên khoa có trạng thái là "active"
                 const fieldTypesResponse = await fieldtypesApi.getAllFieldTypes();
@@ -518,7 +549,7 @@ const AssetManagement = () => {
 
                 const createdById = response.user.id;
 
-                if (response.user.role == "isAdmin") {
+                if (response.user.role == "isHead") {
 
                     await courtsManagementApi.getAllCourts().then((res) => {
                         console.log(res);
@@ -563,7 +594,7 @@ const AssetManagement = () => {
                             >
                                 <Row>
                                     <Col span="18">
-                                        {userData.role == "isAdmin" ?
+                                        {userData.role == "isHead" ?
 
                                             <Input
                                                 placeholder="Tìm kiếm theo tên và mô tả"
@@ -575,7 +606,7 @@ const AssetManagement = () => {
                                     <Col span="6">
                                         <Row justify="end">
                                             <Space>
-                                                {userData.role !== "isAdmin" ?
+                                                {userData.role == "isHead" ?
 
                                                     <Button onClick={showModal} icon={<PlusOutlined />} style={{ marginLeft: 10 }} >Tạo bác sỹ</Button> : null}
 
@@ -627,16 +658,36 @@ const AssetManagement = () => {
 
                             <Form.Item
                                 name="name"
-                                label="Tên sân"
+                                label="Tên bác sỹ"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng nhập tên sân!',
+                                        message: 'Vui lòng nhập tên bác sỹ!',
                                     },
                                 ]}
                                 style={{ marginBottom: 10 }}
                             >
-                                <Input placeholder="Tên sân" />
+                                <Input placeholder="Tên bác sỹ" />
+                            </Form.Item>
+
+                            <Form.Item
+                                name="id_users"
+                                label="Tài khoản"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn tài khoản cho bác sỹ!',
+                                    },
+                                ]}
+                                style={{ marginBottom: 10 }}
+                            >
+                                <Select placeholder="Chọn tài khoản">
+                                    {user.map(item => (
+                                        <Select.Option key={item.id} value={item.id}>
+                                            {item.username}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
                             </Form.Item>
 
                             <Form.Item
@@ -650,7 +701,54 @@ const AssetManagement = () => {
                                 ]}
                                 style={{ marginBottom: 10 }}
                             >
-                                <Input.TextArea placeholder="Mô tả" />
+
+                                <SunEditor
+                                    lang="en"
+                                    placeholder="Content"
+                                    onChange={handleChange}
+                                    setContents={description}
+                                    setOptions={{
+                                        buttonList: [
+                                            ["undo", "redo"],
+                                            ["font", "fontSize"],
+                                            // ['paragraphStyle', 'blockquote'],
+                                            [
+                                                "bold",
+                                                "underline",
+                                                "italic",
+                                                "strike",
+                                                "subscript",
+                                                "superscript"
+                                            ],
+                                            ["fontColor", "hiliteColor"],
+                                            ["align", "list", "lineHeight"],
+                                            ["outdent", "indent"],
+
+                                            ["table", "horizontalRule", "link", "image", "video"],
+                                            // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
+                                            // ['imageGallery'], // You must add the "imageGalleryUrl".
+                                            // ["fullScreen", "showBlocks", "codeView"],
+                                            ["preview", "print"],
+                                            ["removeFormat"]
+
+                                            // ['save', 'template'],
+                                            // '/', Line break
+                                        ],
+                                        fontSize: [
+                                            8, 10, 14, 18, 24,
+                                        ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                                        defaultTag: "div",
+                                        minHeight: "300px",
+                                        showPathLabel: false,
+                                        attributesWhitelist: {
+                                            all: "style",
+                                            table: "cellpadding|width|cellspacing|height|style",
+                                            tr: "valign|style",
+                                            td: "styleinsert|height|style",
+                                            img: "title|alt|src|style"
+                                        }
+                                    }}
+                                />
                             </Form.Item>
 
                             <Form.Item
@@ -691,6 +789,8 @@ const AssetManagement = () => {
                                     ))}
                                 </Select>
                             </Form.Item>
+
+
 
                             <Form.Item
                                 name="id_areas"
@@ -786,18 +886,37 @@ const AssetManagement = () => {
                         <Spin spinning={loading}>
                             <Form.Item
                                 name="name"
-                                label="Tên sân"
+                                label="Tên bác sỹ"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng nhập tên sân!',
+                                        message: 'Vui lòng nhập tên bác sỹ!',
                                     },
                                 ]}
                                 style={{ marginBottom: 10 }}
                             >
-                                <Input placeholder="Tên sân" />
+                                <Input placeholder="Tên bác sỹ" />
                             </Form.Item>
 
+                            <Form.Item
+                                name="id_users"
+                                label="Tài khoản"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn tài khoản cho bác sỹ!',
+                                    },
+                                ]}
+                                style={{ marginBottom: 10 }}
+                            >
+                                <Select placeholder="Chọn tài khoản">
+                                    {user.map(item => (
+                                        <Select.Option key={item.id} value={item.id}>
+                                            {item.username}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
                             <Form.Item
                                 name="description"
                                 label="Mô tả"
@@ -809,9 +928,55 @@ const AssetManagement = () => {
                                 ]}
                                 style={{ marginBottom: 10 }}
                             >
-                                <Input.TextArea placeholder="Mô tả" />
-                            </Form.Item>
 
+                                <SunEditor
+                                    lang="en"
+                                    placeholder="Content"
+                                    onChange={handleChange}
+                                    setContents={description}
+                                    setOptions={{
+                                        buttonList: [
+                                            ["undo", "redo"],
+                                            ["font", "fontSize"],
+                                            // ['paragraphStyle', 'blockquote'],
+                                            [
+                                                "bold",
+                                                "underline",
+                                                "italic",
+                                                "strike",
+                                                "subscript",
+                                                "superscript"
+                                            ],
+                                            ["fontColor", "hiliteColor"],
+                                            ["align", "list", "lineHeight"],
+                                            ["outdent", "indent"],
+
+                                            ["table", "horizontalRule", "link", "image", "video"],
+                                            // ['math'] //You must add the 'katex' library at options to use the 'math' plugin.
+                                            // ['imageGallery'], // You must add the "imageGalleryUrl".
+                                            // ["fullScreen", "showBlocks", "codeView"],
+                                            ["preview", "print"],
+                                            ["removeFormat"]
+
+                                            // ['save', 'template'],
+                                            // '/', Line break
+                                        ],
+                                        fontSize: [
+                                            8, 10, 14, 18, 24,
+                                        ], // Or Array of button list, eg. [['font', 'align'], ['image']]
+                                        defaultTag: "div",
+                                        minHeight: "300px",
+                                        showPathLabel: false,
+                                        attributesWhitelist: {
+                                            all: "style",
+                                            table: "cellpadding|width|cellspacing|height|style",
+                                            tr: "valign|style",
+                                            td: "styleinsert|height|style",
+                                            img: "title|alt|src|style"
+                                        }
+                                    }}
+                                />
+                            </Form.Item>
                             <Form.Item
                                 name="price"
                                 label="Giá"

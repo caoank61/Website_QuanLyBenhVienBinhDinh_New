@@ -5,13 +5,13 @@ exports.addCourt = async (req, res) => {
     try {
         const { name, id_areas, id_field_types, id_users, status, price, image, description } = req.body;
         
-        // Kiểm tra xem tên sân đã tồn tại trong cơ sở dữ liệu chưa
+        // Kiểm tra xem tên đã tồn tại trong cơ sở dữ liệu chưa
         const [existingCourts] = await db.execute('SELECT id FROM courts WHERE name = ?', [name]);
         if (existingCourts.length > 0) {
             return res.status(200).json({ message: 'Tên sân đã tồn tại' });
         }
 
-        // Tiến hành thêm sân mới
+        // Tiến hành thêm mới
         const [result] = await db.execute(
             'INSERT INTO courts (name, id_areas, id_field_types, id_users, status, price, image, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [name, id_areas, id_field_types, id_users, status, price, image, description]
@@ -37,7 +37,7 @@ exports.updateCourt = async (req, res) => {
             }
         }
 
-        // Kiểm tra xem tên sân mới không trùng với các tên sân khác (trừ chính sân đang cập nhật)
+        // Kiểm tra xem tên mới không trùng với các tên khác (trừ chính sân đang cập nhật)
         if (updates.hasOwnProperty('name')) {
             const [existingCourts] = await db.execute('SELECT id FROM courts WHERE name = ? AND id != ?', [updates.name, id]);
             if (existingCourts.length > 0) {
@@ -62,7 +62,7 @@ exports.updateCourt = async (req, res) => {
 };
 
 
-// Xóa sân
+// Xóa 
 exports.deleteCourt = async (req, res) => {
     try {
         const id = req.params.id;
@@ -71,7 +71,7 @@ exports.deleteCourt = async (req, res) => {
     } catch (error) {
         console.error(error);
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
-            res.status(200).json({ message: 'Không thể xóa sân này vì đã có đặt sân liên kết đến nó.' });
+            res.status(200).json({ message: 'Không thể xóa sân này vì đã có đặt lịch liên kết đến nó.' });
         } else {
             res.status(500).json({ message: 'Error deleting court' });
         }
@@ -79,7 +79,7 @@ exports.deleteCourt = async (req, res) => {
 };
 
 
-// Lấy thông tin sân theo id
+// Lấy thông tin theo id
 exports.getCourtById = async (req, res) => {
     try {
         const id = req.params.id;
@@ -102,7 +102,7 @@ exports.getCourtById = async (req, res) => {
     }
 };
 
-// Lấy tất cả sân
+// Lấy tất cả 
 exports.getAllCourts = async (req, res) => {
     try {
         const [rows] = await db.execute(`
@@ -119,7 +119,7 @@ exports.getAllCourts = async (req, res) => {
     }
 };
 
-// Tìm kiếm sân
+// Tìm kiếm 
 exports.searchCourts = async (req, res) => {
     try {
         const keyword = req.query.keyword;
@@ -131,7 +131,7 @@ exports.searchCourts = async (req, res) => {
     }
 };
 
-// Cập nhật trạng thái phê duyệt của sân
+// Cập nhật trạng thái phê duyệt của 
 exports.updateApprovalStatus = async (req, res) => {
     try {
         const { approval_status } = req.body;
@@ -144,7 +144,7 @@ exports.updateApprovalStatus = async (req, res) => {
     }
 };
 
-// Lấy thông tin sân theo id người dùng
+// Lấy thông tin theo id người dùng
 exports.getCourtsByUserId = async (req, res) => {
     try {
         const id_users = req.params.id;
@@ -163,7 +163,7 @@ exports.getCourtsByUserId = async (req, res) => {
     }
 };
 
-// Lấy thông tin sân theo id khu vực
+// Lấy thông tin theo id khu vực
 exports.getCourtsByAreaId = async (req, res) => {
     try {
         const id_areas = req.params.id;

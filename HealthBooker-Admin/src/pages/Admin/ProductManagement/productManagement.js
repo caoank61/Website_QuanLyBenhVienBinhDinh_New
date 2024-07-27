@@ -286,8 +286,8 @@ const ProductManagement = () => {
             render: (text) => moment(text).format('YYYY-MM-DD'),
         },
         {
-            title: 'Action',
-            key: 'action',
+            title: 'Hành động',
+            key: 'Hành động',
             render: (text, record) => (
                 <div>
                     <Row>
@@ -300,7 +300,7 @@ const ProductManagement = () => {
                         >{"Chỉnh sửa"}
                         </Button>
                         <div
-                            style={{ marginLeft: 6 }}>
+                            style={{ marginTop: 6 }}>
                             <Popconfirm
                                 title="Bạn có chắc chắn xóa dịch vụ này?"
                                 onConfirm={() => handleDeleteCategory(record.id)}
@@ -403,7 +403,7 @@ const ProductManagement = () => {
                                     <Col span="6">
                                         <Row justify="end">
                                             <Space>
-                                                {userData.role !== "isAdmin" ?
+                                                {userData.role == "isAdmin" ?
 
                                                     <Button onClick={showModal} icon={<PlusOutlined />} style={{ marginLeft: 10 }} >Tạo dịch vụ</Button> : null}
 
@@ -417,8 +417,8 @@ const ProductManagement = () => {
                     </div>
 
                     <div style={{ marginTop: 30 }}>
-                        <Table     scroll={{ x: true }}
- columns={columns} pagination={{ position: ['bottomCenter'] }} dataSource={category} />
+                        <Table scroll={{ x: true }}
+                            columns={columns} pagination={{ position: ['bottomCenter'] }} dataSource={category} />
                     </div>
                 </div>
 
